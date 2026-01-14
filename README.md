@@ -171,8 +171,8 @@ weather-app/
 
 **Raffi**
 
-- GitHub: [@username](https://github.com/Rafreaks06)
-- Email: email@example.com
+- GitHub: [@Rafreaks06](https://github.com/Rafreaks06)
+- Email: mr.rafreaks@gmail.com
 
 ---
 
