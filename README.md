@@ -304,6 +304,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - GitHub: [@Rafreaks06](https://github.com/Rafreaks06)
 - Email: mr.rafreaks@gmail.com
 
+---
+
 ## 🙏 Acknowledgments
 
 - [OpenWeatherMap](https://openweathermap.org/) - Weather data API
@@ -313,10 +315,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## ⭐ Show Your Support
 
-Jika proyek ini membantu Anda, berikan ⭐ di repository ini!
-
----
-
-<div align="center">
-  Made with ❤️ by Raffi
-</div>
+Jika proyek ini bermanfaat, jangan lupa berikan ⭐ di repository ini!
