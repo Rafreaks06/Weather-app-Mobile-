@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/weather_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,11 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final WeatherService _weatherService = WeatherService();
-  final TextEditingController _cityController = TextEditingController(); // Untuk input teks
-  
+  final TextEditingController _cityController = TextEditingController();
+
   Map<String, dynamic>? data;
   bool isLoading = true;
-  String currentCity = "Tangerang"; // Kota default
+  String currentCity = "Tangerang";
+
+  User? get user => Supabase.instance.client.auth.currentUser;
 
   @override
   void initState() {
@@ -23,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     loadData(currentCity);
   }
 
-  // Fungsi loadData sekarang menerima nama kota
   Future<void> loadData(String city) async {
     setState(() {
       isLoading = true;
@@ -33,12 +36,10 @@ class _HomePageState extends State<HomePage> {
       final result = await _weatherService.getCurrentWeather(city);
       setState(() {
         data = result;
-        currentCity = city; // Update kota yang aktif
+        currentCity = city;
         isLoading = false;
       });
     } catch (e) {
-      print("Error: $e");
-      // Jika gagal (misal kota tidak ketemu), tampilkan pesan error
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Kota '$city' tidak ditemukan!")),
@@ -50,7 +51,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Fungsi untuk menampilkan Dialog Pencarian
   void _showSearchDialog() {
     showDialog(
       context: context,
@@ -72,9 +72,9 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               if (_cityController.text.isNotEmpty) {
-                Navigator.pop(context); // Tutup dialog
-                loadData(_cityController.text); // Cari cuaca kota baru
-                _cityController.clear(); // Bersihkan text field
+                Navigator.pop(context);
+                loadData(_cityController.text);
+                _cityController.clear();
               }
             },
             child: const Text("Cari"),
@@ -116,20 +116,45 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Weather App", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Weather App",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        // --- BAGIAN BARU: Tombol Search & Refresh ---
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: _showSearchDialog, // Panggil fungsi dialog
+            onPressed: _showSearchDialog,
           ),
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: () => loadData(currentCity),
-          )
+          ),
+          if (user == null)
+            IconButton(
+              icon: const Icon(Icons.login, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                ).then((_) => setState(() {}));
+              },
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              onPressed: () async {
+                await Supabase.instance.client.auth.signOut();
+                if (mounted) {
+                  setState(() {});
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Logout berhasil")),
+                  );
+                }
+              },
+            ),
         ],
       ),
       body: Container(
@@ -140,19 +165,19 @@ class _HomePageState extends State<HomePage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF4FA3F7), 
+              Color(0xFF4FA3F7),
               Color(0xFF2B5797),
             ],
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView( // Agar aman di layar kecil
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 100),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                
-                // --- NAMA KOTA ---
+
                 Text(
                   data!['name'],
                   style: const TextStyle(
@@ -162,12 +187,11 @@ class _HomePageState extends State<HomePage> {
                     letterSpacing: 1.5,
                   ),
                 ),
-                
+
                 const SizedBox(height: 10),
-                
-                // --- TANGGAL ---
+
                 Text(
-                  DateFormat('EEEE, d MMMM y').format(DateTime.now()), 
+                  DateFormat('EEEE, d MMMM y').format(DateTime.now()),
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white.withOpacity(0.8),
@@ -176,28 +200,12 @@ class _HomePageState extends State<HomePage> {
 
                 const SizedBox(height: 40),
 
-                // --- IKON CUACA ---
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      )
-                    ]
-                  ),
-                  child: Image.network(
-                    'https://openweathermap.org/img/wn/$iconCode@4x.png',
-                    width: 180,
-                    height: 180,
-                    errorBuilder: (context, error, stackTrace) => 
-                        const Icon(Icons.cloud, size: 100, color: Colors.white),
-                  ),
+                Image.network(
+                  'https://openweathermap.org/img/wn/$iconCode@4x.png',
+                  width: 180,
+                  height: 180,
                 ),
 
-                // --- SUHU ---
                 Text(
                   "${data!['main']['temp'].toStringAsFixed(0)}°",
                   style: const TextStyle(
@@ -207,7 +215,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                // --- DESKRIPSI ---
                 Text(
                   data!['weather'][0]['description'].toString().toUpperCase(),
                   style: const TextStyle(
@@ -218,9 +225,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 40),
 
-                // --- KARTU INFO TAMBAHAN ---
+                // INFO CARD
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.all(20),
@@ -232,12 +239,21 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildInfoItem(Icons.water_drop, "Humidity", "${data!['main']['humidity']}%"),
+                      _buildInfoItem(
+                        Icons.water_drop,
+                        "Humidity",
+                        "${data!['main']['humidity']}%",
+                      ),
                       Container(height: 40, width: 1, color: Colors.white30),
-                      _buildInfoItem(Icons.air, "Wind", "${data!['wind']['speed']} m/s"),
+                      _buildInfoItem(
+                        Icons.air,
+                        "Wind",
+                        "${data!['wind']['speed']} m/s",
+                      ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
               ],
             ),
@@ -260,9 +276,9 @@ class _HomePageState extends State<HomePage> {
         Text(
           value,
           style: const TextStyle(
-            color: Colors.white, 
-            fontWeight: FontWeight.bold, 
-            fontSize: 16
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
       ],

@@ -1,189 +1,322 @@
-# 🌤️ Weather App (Cuaca Raffi)
+# 🌤️ Cuaca Raffi - Weather App
 
-Aplikasi cuaca berbasis mobile yang dibangun menggunakan **Flutter** dengan tampilan antarmuka modern (*Glassmorphism*) dan didukung oleh Backend **Node.js (Express)**.
+Aplikasi cuaca berbasis mobile yang dibangun menggunakan **Flutter** dengan desain modern **Glassmorphism**. Dilengkapi dengan autentikasi **Google OAuth** melalui Supabase dan backend Node.js untuk keamanan API key.
 
-Aplikasi ini menampilkan cuaca real-time, ramalan cuaca 5 hari ke depan, dan detail cuaca (kelembaban, angin, tekanan) menggunakan data dari OpenWeatherMap.
+## ✨ Fitur
 
----
+- 🌡️ **Real-time Weather** - Menampilkan suhu dan kondisi cuaca terkini
+- 🔍 **Search City** - Cari cuaca di berbagai kota di seluruh dunia
+- 📅 **5-Day Forecast** - Ramalan cuaca 5 hari ke depan
+- 💨 **Weather Details** - Informasi detail kelembaban, kecepatan angin, dan tekanan udara
+- 🔐 **Google Authentication** - Login mudah dan aman menggunakan akun Google
+- 💾 **Session Persistence** - Tetap login meskipun aplikasi ditutup
+- 🎨 **Modern UI** - Desain glassmorphism yang elegan
+- 🔒 **Secure API** - API key tersimpan aman di backend
 
-## 📸 Preview
+## 📸 Screenshots
 
 <div align="center">
-  <img src="screenshots/home.png" alt="Home Screen" width="250"/>
-  <img src="screenshots/search.png" alt="Search City" width="250"/>
-  <img src="screenshots/forecast.png" alt="5-Day Forecast" width="250"/>
+  <img src="screenshots/login.png" alt="Login Page" width="200"/>
+  <img src="screenshots/home.png" alt="Home Screen" width="200"/>
+  <img src="screenshots/search.png" alt="Search City" width="200"/>
+  <img src="screenshots/forecast.png" alt="5-Day Forecast" width="200"/>
 </div>
 
-<div align="center">
-  <img src="screenshots/details.png" alt="Weather Details" width="250"/>
-</div>
-
-
-
----
-
-## 📱 Fitur Utama
-
-- **Real-time Weather:** Menampilkan suhu dan cuaca terkini
-- **Search City:** Fitur pencarian untuk mengecek cuaca di kota mana pun di dunia
-- **5-Day Forecast:** Melihat ramalan cuaca per 3 jam untuk 5 hari ke depan
-- **Interactive Details:** Klik pada daftar ramalan untuk melihat detail lengkap (angin, kelembaban, dll)
-
-
----
-
-## 🛠️ Teknologi yang Digunakan
+## 🛠️ Tech Stack
 
 ### Frontend (Mobile)
-- Flutter (Dart)
-- State Management: `setState` (Native)
-- Library: `http`, `intl`
+- **Flutter** (Dart)
+- **Supabase Flutter SDK** - Authentication
+- **State Management** - setState (Native)
+- **Dependencies**:
+  - `http` - HTTP requests
+  - `intl` - Internationalization
+  - `flutter_dotenv` - Environment variables
+  - `supabase_flutter` - Supabase integration
 
 ### Backend (API Service)
-- Node.js & Express.js
-- Axios (Request ke OpenWeatherMap)
-- Cors & Dotenv
+- **Node.js** & **Express.js**
+- **Axios** - HTTP client
+- **CORS** - Cross-Origin Resource Sharing
+- **Dotenv** - Environment configuration
 
----
+### External Services
+- **OpenWeatherMap API** - Weather data
+- **Supabase Auth** - Google OAuth authentication
 
-## 🚀 Cara Menjalankan Aplikasi
+## 📋 Prerequisites
 
-Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal Anda.
+Sebelum memulai, pastikan Anda telah menginstal:
 
-### 1️⃣ Persiapan Backend (Server)
+- ✅ [Flutter SDK](https://flutter.dev/docs/get-started/install) (>= 3.x)
+- ✅ [Node.js](https://nodejs.org/) (>= 14.x)
+- ✅ [Android Studio](https://developer.android.com/studio) atau VS Code
+- ✅ Emulator Android atau device fisik
+- ✅ Akun [Supabase](https://supabase.com)
+- ✅ Akun [Google Developer Console](https://console.developers.google.com)
+- ✅ API Key dari [OpenWeatherMap](https://openweathermap.org/api)
 
-Karena API Key disembunyikan untuk keamanan, Anda perlu menyetting backend terlebih dahulu.
+## 🚀 Installation & Setup
 
-#### Langkah-langkah:
+### 1️⃣ Clone Repository
 
-1. **Install dependencies:**
 ```bash
-   cd backend
-   npm install
+git clone https://github.com/Rafreaks06/weather-app.git
+cd weather-app
 ```
 
-2. **Buat file `.env`:**
-   
-   Buat file baru bernama `.env` di folder backend, lalu isi dengan konfigurasi berikut:
+### 2️⃣ Setup Backend
+
+#### Install Dependencies
+
+```bash
+cd backend
+npm install
+```
+
+#### Configure Environment Variables
+
+Buat file `.env` di folder `backend/`:
+
 ```env
-   API_KEY=MASUKKAN_API_KEY_OPENWEATHERMAP_DISINI
-   PORT=3001
+API_KEY=your_openweathermap_api_key
+PORT=3001
 ```
-   
-   > **Catatan:** Anda bisa mendapatkan API Key gratis di [openweathermap.org](https://openweathermap.org)
 
-3. **Jalankan server:**
+> ⚠️ **Penting**: Dapatkan API key dari [OpenWeatherMap](https://openweathermap.org/api)
+
+#### Run Backend Server
+
 ```bash
-   node index.js
+node index.js
 ```
-   
-   Pastikan terminal menampilkan: `Backend jalan di http://localhost:3001`
 
----
+Jika berhasil, akan muncul:
+```
+Backend jalan di http://localhost:3001
+```
 
-### 2️⃣ Persiapan Frontend (Flutter)
+### 3️⃣ Setup Supabase
 
-#### Langkah-langkah:
+#### Create Project
 
-1. **Buka terminal baru** dan pastikan berada di folder project Flutter
+1. Buka [Supabase Dashboard](https://supabase.com)
+2. Klik **New Project**
+3. Isi detail project dan tunggu hingga selesai
 
-2. **Install dependencies:**
+#### Enable Google OAuth
+
+1. Masuk ke **Authentication** → **Providers**
+2. Aktifkan **Google**
+3. Isi credential dari [Google Console](https://console.developers.google.com):
+   - **Client ID**
+   - **Client Secret**
+4. Tambahkan **Authorized Redirect URI**:
+   ```
+   io.supabase.flutter://login-callback
+   ```
+
+#### Get Supabase Credentials
+
+1. Buka **Settings** → **API**
+2. Copy:
+   - **Project URL**
+   - **anon/public key**
+
+### 4️⃣ Setup Flutter App
+
+#### Install Dependencies
+
 ```bash
-   flutter pub get
+cd ../weather_app  # atau sesuai nama folder Flutter Anda
+flutter pub get
 ```
 
-3. **Pastikan Emulator Android sudah berjalan**
-   - Disarankan menggunakan API 33/34
+#### Configure Environment Variables
 
-4. **Jalankan aplikasi:**
+Buat file `.env` di root folder Flutter:
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+> ⚠️ **Catatan**: 
+> - Jangan gunakan tanda petik
+> - Jangan ada spasi
+> - Pastikan tidak ada koma di akhir
+
+#### Update pubspec.yaml
+
+Pastikan file `.env` ditambahkan ke assets:
+
+```yaml
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+```
+
+#### Run Application
+
 ```bash
-   flutter run
+flutter clean
+flutter pub get
+flutter run
 ```
 
----
+Pilih device/emulator yang ingin digunakan.
 
-## 📋 Prasyarat
+## 📂 Project Structure
 
-Sebelum menjalankan aplikasi, pastikan Anda telah menginstal:
-
-- **Flutter SDK** (versi 3.0 atau lebih baru)
-- **Node.js** (versi 14 atau lebih baru)
-- **npm** atau **yarn**
-- **Android Studio** dengan emulator atau perangkat fisik untuk testing
-
----
-
-## 📂 Struktur Folder
 ```
-weather-app/
+weather_app/
 ├── backend/
-│   ├── index.js
-│   ├── package.json
-│   └── .env
-├── lib/
-│   ├── main.dart
-│   └── ...
-├── screenshots/         
-│   ├── home.png
-│   ├── search.png
-│   ├── forecast.png
-│   ├── details.png
+│   ├── index.js           # Express server
+│   ├── package.json       # Node dependencies
+│   └── .env              # Backend environment variables
 │
-├── pubspec.yaml
-└── README.md
+├── lib/
+│   ├── pages/
+│   │   ├── login_page.dart     # Login screen
+│   │   ├── home_page.dart      # Main weather screen
+│   │   └── forecast_page.dart  # 5-day forecast
+│   │
+│   ├── services/
+│   │   ├── auth_service.dart    # Supabase authentication
+│   │   └── weather_service.dart # Weather API calls
+│   │
+│   └── main.dart          # App entry point
+│
+├── screenshots/          # App screenshots
+├── .env                 # Flutter environment variables
+├── pubspec.yaml        # Flutter dependencies
+└── README.md          # This file
 ```
 
----
+## 🔐 Authentication Flow
 
-## 🔑 Mendapatkan API Key OpenWeatherMap
-
-1. Kunjungi [OpenWeatherMap](https://openweathermap.org/)
-2. Buat akun gratis
-3. Navigasi ke bagian **API Keys**
-4. Copy API Key Anda
-5. Paste ke file `.env` di backend
-
----
+```
+1. User clicks "Continue with Google"
+2. Redirect to Google login page
+3. User authenticates with Google
+4. Redirect back to app with auth token
+5. Session saved automatically by Supabase
+6. User redirected to Home page
+```
 
 ## 🐛 Troubleshooting
 
-### Backend tidak jalan
-- Pastikan port 3001 tidak digunakan aplikasi lain
-- Cek apakah file `.env` sudah dibuat dengan benar
-- Verifikasi API Key valid
+### ❌ Error: `.env` file not found
 
-### Flutter error saat run
-- Jalankan `flutter clean` kemudian `flutter pub get`
-- Pastikan emulator sudah running
-- Cek koneksi internet untuk download dependencies
+**Solusi:**
+- Pastikan file `.env` ada di root folder Flutter
+- Sudah ditambahkan di `pubspec.yaml` → `assets`
+- Jalankan `flutter clean` dan `flutter pub get`
 
----
+### ❌ Login loop / redirect ke login terus
 
+**Solusi:**
+- Periksa Redirect URL di Supabase: `io.supabase.flutter://login-callback`
+- Pastikan `AuthGate` atau `StreamBuilder` sudah benar
+- Cek apakah Supabase initialize berhasil di `main.dart`
 
+### ❌ Data cuaca tidak muncul
 
-## 📝 Lisensi
+**Solusi:**
+- Pastikan backend berjalan di `http://localhost:3001`
+- Cek API key OpenWeatherMap valid
+- Pastikan koneksi internet aktif
+- Cek log di terminal untuk error message
 
-[MIT License](LICENSE)
+### ❌ Build error di Android
 
----
+**Solusi:**
+```bash
+flutter clean
+cd android
+./gradlew clean
+cd ..
+flutter pub get
+flutter run
+```
+
+## 🔄 API Endpoints
+
+### Backend Endpoints
+
+```
+GET /api/weather?city={cityName}
+```
+Response:
+```json
+{
+  "name": "Jakarta",
+  "main": {
+    "temp": 30.5,
+    "humidity": 70,
+    "pressure": 1013
+  },
+  "weather": [
+    {
+      "main": "Clouds",
+      "description": "broken clouds"
+    }
+  ],
+  "wind": {
+    "speed": 3.5
+  }
+}
+```
+
+## 📝 Environment Variables
+
+### Backend (.env)
+```env
+API_KEY=your_openweathermap_api_key
+PORT=3001
+```
+
+### Flutter (.env)
+```env
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOi...
+```
+
+## 🤝 Contributing
+
+Kontribusi selalu diterima! Jika Anda ingin berkontribusi:
+
+1. Fork repository ini
+2. Buat branch baru (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 👤 Author
 
 **Raffi**
 
-- GitHub: [@username](https://github.com/Rafreaks06)
-- Email: email@example.com
-
----
+- GitHub: [@Rafreaks06](https://github.com/Rafreaks06)
+- Email: mr.rafreaks@gmail.com
 
 ## 🙏 Acknowledgments
 
-- [OpenWeatherMap API](https://openweathermap.org/) untuk data cuaca
-- Flutter Community
-- Node.js Community
+- [OpenWeatherMap](https://openweathermap.org/) - Weather data API
+- [Supabase](https://supabase.com/) - Backend as a Service
+- [Flutter](https://flutter.dev/) - UI framework
+- [Node.js](https://nodejs.org/) - Backend runtime
+
+## ⭐ Show Your Support
+
+Jika proyek ini membantu Anda, berikan ⭐ di repository ini!
 
 ---
 
-## ⭐ Support
-
-Jika proyek ini bermanfaat, jangan lupa berikan ⭐ di repository ini!
+<div align="center">
+  Made with ❤️ by Raffi
+</div>
