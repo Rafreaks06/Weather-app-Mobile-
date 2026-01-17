@@ -94,8 +94,9 @@ node index.js
 Jika berhasil, akan muncul:
 ```
 Backend jalan di http://localhost:3001
-(Bisa Disesuaikan Di kode untuk Port Backend nya Disini Saya Menggunakan 3001)
+
 ```
+> (Bisa Disesuaikan Di kode untuk Port Backend nya Disini Saya Menggunakan 3001)
 
 ### 3️⃣ Setup Supabase
 
