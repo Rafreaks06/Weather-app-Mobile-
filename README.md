@@ -144,9 +144,9 @@ SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
 > ⚠️ **Catatan**: 
-> - Jangan gunakan tanda petik
-> - Jangan ada spasi
-> - Pastikan tidak ada koma di akhir
+> - Jangan gunakan tanda petik ""
+> - Jangan ada spasi " "
+> - Pastikan tidak ada koma di akhir ,
 
 #### Update pubspec.yaml
 
